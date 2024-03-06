@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import CropSelection from './component/CropSelection';
 import ImageCapture from './component/ImageCapture';
+import PastReports from './component/PastReports';
 import LoadingAnimation from './component/LoadingAnimation';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ReportDisplay from './component/ReportDisplay';
 import jsPDF from 'jspdf';
 
-const crops = ['Crop 1', 'Crop 2', 'Crop 3']; // Sample crop list
+const crops = ['Rice', 'Wheet', 'Corn', 'Chickpea']; // Sample crop list
 
 const Home = () => {
   const [selectedCrop, setSelectedCrop] = useState('');
@@ -28,6 +30,19 @@ const Home = () => {
     const pdfDataURI = pdf.output('datauristring');
 
     return pdfDataURI;
+  };
+
+  const generatePDFDataBinary = (imageSrc) => {
+    // Create a new jsPDF instance
+    const pdf = new jsPDF();
+
+    // Add image data to the PDF
+    pdf.addImage(imageSrc, 'JPEG', 10, 10); // Adjust position and dimensions as needed
+
+    // Output the PDF as data URI
+    const pdfBinary = pdf.output('arraybuffer');
+
+    return pdfBinary;
   };
 
   const handleSubmit = async (imageSrc) => {
@@ -54,38 +69,57 @@ const Home = () => {
 
   const handleImageCapture = (imageSrc) => {
     console.log({ imageSrc });
-    setCapturedImage(imageSrc);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    // Send image to backend for processing
-    const pdfData = generatePDFDataURI(imageSrc);
-    handleSubmit(pdfData);
-    setReport(pdfData);
-    // Update report state upon completion
+    if (imageSrc) {
+      setCapturedImage(imageSrc);
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+      // Send image to backend for processing
+      const pdfData = generatePDFDataURI(imageSrc);
+      const pdfBinaryData = generatePDFDataBinary(imageSrc);
+      handleSubmit(pdfBinaryData);
+      setReport(pdfData);
+    }
   };
 
   return (
-    <div>
-      <CropSelection crops={crops} onSelect={handleCropSelect} />
-      {selectedCrop && (
-        <>
-          <ImageCapture onCapture={handleImageCapture} />
-          {loading ? (
-            <LoadingAnimation />
-          ) : (
-            capturedImage && (
-              <ReportDisplay
-                report={report}
-                capturedImage={capturedImage}
-                crop={selectedCrop}
-              />
-            )
-          )}
-        </>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="main-container">
+              <CropSelection crops={crops} onSelect={handleCropSelect} />
+              <ImageCapture onCapture={handleImageCapture} />
+              {selectedCrop && (
+                <>
+                  {loading ? (
+                    <LoadingAnimation />
+                  ) : (
+                    capturedImage && (
+                      <ReportDisplay
+                        report={report}
+                        capturedImage={capturedImage}
+                        crop={selectedCrop}
+                      />
+                    )
+                  )}
+                </>
+              )}
+            </div>
+          }
+        ></Route>
+        <Route
+          path="/reports"
+          element={
+            <>
+              <PastReports />
+            </>
+          }
+        />
+      </Routes>
+    </Router>
   );
 };
 

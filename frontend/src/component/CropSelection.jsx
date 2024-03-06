@@ -10,16 +10,14 @@ const CropSelection = ({ crops, onSelect }) => {
   };
 
   return (
-    <div className="flex justify-center align-center mt-4">
-      <h2 className="text-3xl font-bold underline">Select Crop:</h2>
+    <div className="flex justify-center flex-col align-center crop-container">
+      <h2 className="block  mb-4 welcomeText">Welcome to crop analyses</h2>
       <select
         value={selectedCrop}
-        className="cursor-pointer text-xl border-black rounded"
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-50"
         onChange={handleCropChange}
       >
-        <option value="" className="cursor-pointer border-black text-xl">
-          Select Crop
-        </option>
+        <option selected>Select a crop to analyse</option>
         {crops.map((crop, index) => (
           <option key={index} value={crop}>
             {crop}

@@ -4,7 +4,12 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 const manifestForPlugIn = {
   registerType: 'prompt',
-  includeAssests: ['favicon.ico', 'download192.png', 'vite.svg'],
+  includeAssets: [
+    'favicon.ico',
+    'download192.png',
+    'download512.png',
+    'vite.svg',
+  ],
   manifest: {
     name: 'SundayLabs',
     short_name: 'SundayLabs',
@@ -40,6 +45,6 @@ const manifestForPlugIn = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [react(), VitePWA(manifestForPlugIn)],
 });
