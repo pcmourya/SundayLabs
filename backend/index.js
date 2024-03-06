@@ -7,8 +7,16 @@ const { v4: uuidv4 } = require('uuid');
 const bodyParser = require('body-parser');
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+  }),
+);
 app.use(bodyParser.json());
+app.options('*', cors());
+
 app.use('/files', express.static('files'));
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -81,3 +89,6 @@ app.get('/crops', (req, res) => {
     return res.json(rows);
   });
 });
+
+// npm run build
+// npm run preview

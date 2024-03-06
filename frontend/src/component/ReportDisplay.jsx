@@ -1,5 +1,4 @@
 import { Document, Page, Image, View } from '@react-pdf/renderer';
-import PastReports from './PastReports';
 
 // eslint-disable-next-line react/prop-types
 const ReportDisplay = ({ report, capturedImage, crop }) => {
@@ -24,26 +23,22 @@ const ReportDisplay = ({ report, capturedImage, crop }) => {
       {report ? (
         <div className="flex flex-grow-0 justify-center">
           <div className="h-50 w-50 justify-center flex flex-col ">
-            <p>Generated Result</p>
+            <p className="text-xl mt-4 mb-4">Generated Result</p>
             <a href={report} target="_blank" rel="noopener noreferrer">
               <img
                 src={capturedImage}
                 alt="Captured"
                 style={{ width: '200px', height: '200px' }}
+                className="rounded"
               />
             </a>
-            <p>{crop}</p>
+            <p className="text-md mt-3">{crop}</p>
           </div>
         </div>
       ) : (
         <div>Please select an image</div>
       )}
-      {
-        <>
-          {report && renderPdf()}
-          <PastReports />
-        </>
-      }
+      {<>{report && renderPdf()}</>}
     </>
   );
 };
